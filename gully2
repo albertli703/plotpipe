@@ -17,6 +17,7 @@ ds_invert_level
 
 import matplotlib.pyplot as plt
 import numpy as np
+
 def draw(us_manhole, us_manhole_cover_level, us_paving_thickness, us_invert_level, us_manhole_depth, \
          paving_type, pipe_type, pipe_dia, pipe_length, pipe_wall_thickness, pipe_bedding_thickness, \
          effective_trench_width, \
@@ -49,7 +50,7 @@ def draw(us_manhole, us_manhole_cover_level, us_paving_thickness, us_invert_leve
 
     # marker='v'
     plt.plot([0,2], line_cover, 'k', linewidth=1, linestyle='dashed')
-    plt.plot([0,2], line_invert, 'k',linewidth=1, linestyle='dashed')
+    plt.plot([0,2], line_invert, 'red',linewidth=1, linestyle='dashed')
     plt.plot([0,2], line_pipe_bottom, 'k', linewidth=1, linestyle='dashed')
     plt.plot([0,2], line_trench_bottom, 'k', linewidth=1, linestyle='dashed')
     plt.plot([0,2], line_formation, 'k', linewidth=1, linestyle='dashed')
@@ -90,7 +91,7 @@ def draw(us_manhole, us_manhole_cover_level, us_paving_thickness, us_invert_leve
             verticalalignment='bottom')
     ax.text(-0.1, us_invert_level, 'Invert Level = ' + str(us_invert_level),
             horizontalalignment='right',
-            verticalalignment='bottom')
+            verticalalignment='bottom', color="red")
     ax.text(-0.1, us_pipe_bottom_level, 'Pipe B.L. = ' + str(us_pipe_bottom_level),
             horizontalalignment='right',
             verticalalignment='top')
@@ -106,7 +107,7 @@ def draw(us_manhole, us_manhole_cover_level, us_paving_thickness, us_invert_leve
             verticalalignment='bottom')
     ax.text(2.1, ds_invert_level, 'Invert Level = ' + str(ds_invert_level),
             horizontalalignment='left',
-            verticalalignment='bottom')
+            verticalalignment='bottom', color="red")
     ax.text(2.1, ds_pipe_bottom_level, 'Pipe B.L. = ' + str(ds_pipe_bottom_level),
             horizontalalignment='left',
             verticalalignment='top')
@@ -142,7 +143,8 @@ def draw(us_manhole, us_manhole_cover_level, us_paving_thickness, us_invert_leve
     plt.annotate(s='', xy=(0,us_trench_bottom_level - (top-bottom)/50), xytext=(2,ds_trench_bottom_level - (top-bottom)/50), arrowprops=dict(arrowstyle='<->'), horizontalalignment='right')
     ax.text(1, (us_trench_bottom_level - ds_trench_bottom_level)*2/5 + ds_trench_bottom_level, 
             'Pipe Length = ' + str(pipe_length) + 'm',
-            horizontalalignment='center', verticalalignment='top', fontsize = 10, rotation=-17)
+            horizontalalignment='center', verticalalignment='top', 
+            fontsize = 10, rotation=-17, color="red")
 
     plt.annotate(s='', xy=(2.05,ds_manhole_cover_level), xytext=(2.05,ds_formation_level), arrowprops=dict(arrowstyle='<->'), horizontalalignment='right')
     ax.text(2.05, (ds_manhole_cover_level - ds_formation_level)*3/4 + ds_formation_level, 
