@@ -1,0 +1,234 @@
+import matplotlib.pyplot as plt
+import numpy as np
+def draw(us_manhole, us_manhole_cover_level, us_paving_thickness, us_invert_level, us_manhole_depth, \
+         paving_type, pipe_type, pipe_dia, pipe_length, pipe_wall_thickness, pipe_bedding_thickness, \
+         effective_trench_width, \
+         ds_manhole, ds_manhole_cover_level, ds_paving_thickness, ds_invert_level):
+
+    us_manhole_bottom_level = us_manhole_cover_level - us_manhole_depth
+
+    us_formation_level = round(us_manhole_cover_level - us_paving_thickness, 3)
+    us_pipe_bottom_level = round(us_invert_level - pipe_wall_thickness, 3)
+    us_trench_bottom_level = round(us_invert_level - pipe_wall_thickness - pipe_bedding_thickness, 3)
+
+    ds_formation_level = round(ds_manhole_cover_level - ds_paving_thickness, 3)
+    ds_pipe_bottom_level = round(ds_invert_level - pipe_wall_thickness, 3)
+    ds_trench_bottom_level = round(ds_invert_level - pipe_wall_thickness - pipe_bedding_thickness, 3)
+
+    fig = plt.figure(figsize=(10,10))
+
+    ax = plt.gca()
+    ymax = us_manhole_cover_level
+    ymin = ds_trench_bottom_level
+    aspect = ymax - ymin
+    # ax.set_aspect(aspect)
+
+    line_cover = [us_manhole_cover_level, ds_manhole_cover_level]
+    line_invert = [us_invert_level, ds_invert_level]
+    line_pipe_bottom = [us_pipe_bottom_level, ds_pipe_bottom_level]
+    line_trench_bottom = [us_trench_bottom_level, ds_trench_bottom_level]
+    line_formation = [us_formation_level, ds_formation_level]
+    line_manhole = [us_manhole_cover_level, us_manhole_bottom_level]
+
+    # marker='v'
+    plt.plot([0,2], line_cover, 'k', linewidth=1, linestyle='dashed')
+    plt.plot([0,2], line_invert, 'k',linewidth=1, linestyle='dashed')
+    plt.plot([0,2], line_pipe_bottom, 'k', linewidth=1, linestyle='dashed')
+    plt.plot([0,2], line_trench_bottom, 'k', linewidth=1, linestyle='dashed')
+    plt.plot([0,2], line_formation, 'k', linewidth=1, linestyle='dashed')
+    plt.plot([0,0], line_manhole, 'k', linewidth=1)
+    plt.plot([-0.9,-0.9], line_manhole, 'k', linewidth=1)
+    plt.plot([-0.9,0], [us_manhole_cover_level]*2, 'k', linewidth=1)
+    plt.plot([-0.9,0], [us_manhole_bottom_level]*2, 'k', linewidth=1)
+
+    left, right = plt.xlim()
+    plt.xlim(-1, 3)
+    bottom, top = plt.ylim()
+    plt.ylim(bottom-(top-bottom)*4/5, top+(top-bottom)*1/5)
+
+    location = top+(top-bottom)*1/10
+
+    ax.text(0, location, 'Upstream',
+            horizontalalignment='center',
+            verticalalignment='bottom', fontsize = 12)
+    ax.text(1, location, 'Pipe',
+            horizontalalignment='center',
+            verticalalignment='bottom', fontsize = 12)
+    ax.text(2, location, 'Downstream',
+            horizontalalignment='center',
+            verticalalignment='bottom', fontsize = 12)
+
+    ax.text(0, location, us_manhole,
+            horizontalalignment='center',
+            verticalalignment='top', fontsize = 12, weight='bold')
+    ax.text(1, location, pipe_dia + ' ' + pipe_type,
+            horizontalalignment='center',
+            verticalalignment='top', fontsize = 12, weight='bold')
+    ax.text(2, location, ds_manhole,
+            horizontalalignment='center',
+            verticalalignment='top', fontsize = 12, weight='bold')
+
+    ax.text(-0.1, us_manhole_cover_level, 'Cover Level = ' + str(us_manhole_cover_level),
+            horizontalalignment='right',
+            verticalalignment='bottom')
+    ax.text(-0.1, us_invert_level, 'Invert Level = ' + str(us_invert_level),
+            horizontalalignment='right',
+            verticalalignment='bottom')
+    ax.text(-0.1, us_pipe_bottom_level, 'Pipe B.L. = ' + str(us_pipe_bottom_level),
+            horizontalalignment='right',
+            verticalalignment='top')
+    ax.text(-0.1, us_trench_bottom_level, 'Trench B.L. = ' + str(us_trench_bottom_level),
+            horizontalalignment='right',
+            verticalalignment='top')
+    ax.text(-0.1, us_manhole_bottom_level, 'Bottom Level = ' + str(us_manhole_bottom_level),
+            horizontalalignment='right',
+            verticalalignment='bottom')
+
+    ax.text(2.1, ds_manhole_cover_level, 'Cover Level = ' + str(ds_manhole_cover_level),
+            horizontalalignment='left',
+            verticalalignment='bottom')
+    ax.text(2.1, ds_invert_level, 'Invert Level = ' + str(ds_invert_level),
+            horizontalalignment='left',
+            verticalalignment='bottom')
+    ax.text(2.1, ds_pipe_bottom_level, 'Pipe B.L. = ' + str(ds_pipe_bottom_level),
+            horizontalalignment='left',
+            verticalalignment='top')
+    ax.text(2.1, ds_trench_bottom_level, 'Trench B.L. = ' + str(ds_trench_bottom_level),
+            horizontalalignment='left',
+            verticalalignment='top')
+
+    h1 = (us_manhole_cover_level + us_formation_level)/2
+    h2 = (ds_manhole_cover_level + ds_formation_level)/2
+    ax.annotate(' Formation Lv. \n = ' + str(us_formation_level), xy=(0, us_formation_level), xytext=(0, h1),
+                arrowprops=dict(arrowstyle="->", connectionstyle="arc3"), horizontalalignment='left'
+                )
+    ax.annotate(' Formation Lv. \n = ' + str(ds_formation_level) + " ", xy=(2, ds_formation_level), xytext=(2, h1),
+                arrowprops=dict(arrowstyle="->", connectionstyle="arc3"), horizontalalignment='right'
+                )
+    y1 = [us_formation_level, ds_formation_level]
+    y2 = [us_trench_bottom_level, ds_trench_bottom_level]
+    ax.fill_between([0,2],y1,y2, color="lightyellow")
+    y3 = [us_formation_level]*2
+    y4 = [us_manhole_bottom_level]*2
+    ax.fill_between([-0.9,0],y3,y4, color="lightyellow")
+
+    # plt.xlabel("Length")
+    # plt.ylabel("Level")
+    plt.xticks([])
+    plt.yticks([])
+
+    us_eo_depth = round(us_formation_level - us_trench_bottom_level,3)
+    ds_eo_depth = round(ds_formation_level - ds_trench_bottom_level,3)
+    average_eo_depth = round((us_eo_depth + ds_eo_depth)/2,3)
+    volume = pipe_length * effective_trench_width * average_eo_depth
+
+    plt.annotate(s='', xy=(0,us_trench_bottom_level - (top-bottom)/50), xytext=(2,ds_trench_bottom_level - (top-bottom)/50), arrowprops=dict(arrowstyle='<->'), horizontalalignment='right')
+    ax.text(1, (us_trench_bottom_level - ds_trench_bottom_level)*2/5 + ds_trench_bottom_level, 
+            'Pipe Length = ' + str(pipe_length) + 'm',
+            horizontalalignment='center', verticalalignment='top', fontsize = 10, rotation=-17)
+
+    plt.annotate(s='', xy=(2.05,ds_manhole_cover_level), xytext=(2.05,ds_formation_level), arrowprops=dict(arrowstyle='<->'), horizontalalignment='right')
+    ax.text(2.05, (ds_manhole_cover_level - ds_formation_level)*3/4 + ds_formation_level, 
+            ' Paving = ' + str(ds_paving_thickness) + 'm\n (' + paving_type + ")",
+            horizontalalignment='left', verticalalignment='top', fontsize = 8)
+
+    plt.annotate(s='', xy=(2.05,ds_formation_level), xytext=(2.05,ds_trench_bottom_level), arrowprops=dict(arrowstyle='<->'), horizontalalignment='right')
+    ax.text(2.05, (ds_formation_level - ds_trench_bottom_level)*3/4 + ds_trench_bottom_level, 
+            ' Exav = ' + str(ds_eo_depth) + 'm',
+            horizontalalignment='left', verticalalignment='top', fontsize = 8)
+
+    plt.annotate(s='', xy=(-0.05,us_formation_level), xytext=(-0.05,us_trench_bottom_level), arrowprops=dict(arrowstyle='<->'), horizontalalignment='right')
+    ax.text(-0.05, (us_formation_level - us_trench_bottom_level)*3/4 + us_trench_bottom_level, 
+            '   Exav = ' + str(us_eo_depth) + 'm ',
+            horizontalalignment='left', verticalalignment='bottom', fontsize = 8, rotation=90)
+
+    if(us_eo_depth>0):
+        text1 = "\nAverage Depth \n"
+        text2 = "= [(U/S Formation Lv. - U/S Trench B.L.) + (D/S Formation Lv. - D/S Trench B.L.)]/2\n"
+        text3 = "= [(" + str(us_formation_level) + " mPD - " + str(us_trench_bottom_level) + " mPD)"\
+              + " + (" + str(ds_formation_level) + " mPD - " + str(ds_trench_bottom_level) + " mPD)]/2\n"
+        text4 = "= (" + str(us_eo_depth) + " m + " + str(ds_eo_depth) + " m)/2\n"
+        text5 = "= " + str(average_eo_depth) + " m\n\n"
+
+        text6 = "Volume for Pipe Trench Excavation below Formation\n"
+        text7 = "= Pipe Length x Effective Trench Width x Average Depth\n"
+        text8 = "= " + str(pipe_length) + " m x " + str(effective_trench_width)\
+          + " m x " + str(average_eo_depth) + " m\n"
+        text9 = "= " + str(round(volume,2)) + " m3\n\n"
+    else:
+        adjusted_pipe_length = round(pipe_length * ds_eo_depth/(ds_eo_depth-us_eo_depth),3)
+        adjusted_volume = round(adjusted_pipe_length * effective_trench_width * ds_eo_depth *0.5, 3)
+        
+        text1 = "\nAdjustmed Pipe Length \n"
+        text2 = "= Pipe Length x [Exav at D/S / (Exav at D/S + ABS(Exav at U/S))]\n"
+        text3 = "= " + str(pipe_length) + " m x [" + str(ds_eo_depth) + " / (" + str(ds_eo_depth) + " + " + str(us_eo_depth*-1) + ")]\n"
+        text4 = "= " + str(pipe_length) + " m x [" + str(round(ds_eo_depth/(ds_eo_depth-us_eo_depth),3)) + "]\n"
+        text5 = "= " + str(adjusted_pipe_length) + " m\n\n"
+                
+        text6 = "Volume for Pipe Trench Excavation below Formation\n"
+        text7 = "= Adjusted Pipe Length x Effective Trench Width x Depth at Base x 0.5 (triangular)\n"
+        text8 = "= " + str(adjusted_pipe_length) + " m x " + str(effective_trench_width)\
+          + " m x " + str(ds_eo_depth) + " m x 0.5\n"
+        text9 = "= " + str(round(adjusted_volume,2)) + " m3\n\n"
+        point = (pipe_length-adjusted_pipe_length)/pipe_length*2
+        ax.fill_between([0,point],[top, top],[bottom, bottom], color="white")
+        plt.annotate(s='', xy=(point,us_formation_level), xytext=(2,us_formation_level), arrowprops=dict(arrowstyle='<->'), horizontalalignment='right')
+        ax.text(2-point/2, us_formation_level, 
+            'Adjusted Pipe Length \n= ' + str(adjusted_pipe_length) + 'm ',
+            horizontalalignment='right', verticalalignment='top', fontsize = 8)
+    
+    text10 = "Volume for Gully Excavation below Formation\n"
+    text11 = "= Gully Length x Gully Width x (Gully Depth - Paving thickness)\n"
+    text12 = "= 0.820 m x 0.865 m x (1.300 - " + str(round(us_paving_thickness,3)) + ") m\n"
+    text13 = "= " + str(round(0.82*0.865*1,2)) + " m3"
+
+    text = text1 + text2 + text3 + text4 + text5 + text6 + text7 + text8 + text9 + text10 + text11 + text12 + text13
+    ax.text(-0.9, bottom - (top-bottom)/10, text, horizontalalignment='left', verticalalignment='top')
+
+    filename = str(ds_manhole) + "_" + str(us_manhole) + ".png"
+    fig.savefig(filename, format="png")
+    plt.show()
+   
+draw(
+    "Gully 3", #us_manhole
+     5.414, #us_manhole_cover_level
+     0.63, #us_paving_thickness
+     4.925, #us_invert_level
+     1.3, #us_manhole_depth
+     'Flex P', #paving_type
+     'uPVC', #pipe_type
+     '150mm', #pipe_dia
+     5, #pipe_length
+     0.0066, #pipe_wall_thickness
+     0.15, #pipe_bedding_thickness
+     0.6, #effective_trench_width
+     "SMH1202", #ds_manholea
+     5.554, #ds_manhole_cover_level
+     0.63, #ds_paving_thickness
+     4.363 #ds_invert_level
+    )
+
+import pandas as pd
+df = pd.read_excel('gully.xlsx')
+l1 = []
+for i in range(3):
+    if(i in l1):
+        pass
+    else:
+        draw(df.us_manhole[i]
+         , df.us_manhole_cover_level[i]
+         , df.us_paving_thickness[i]
+         , df.us_invert_level[i]
+         , df.us_manhole_depth[i]
+         , df.paving_type[i]
+         , df.pipe_type[i]
+         , df.pipe_dia[i]
+         , df.pipe_length[i]
+         , df.pipe_wall_thickness[i]
+         , df.pipe_bedding_thickness[i]
+         , df.effective_trench_width[i]
+         , df.ds_manhole[i]
+         , df.ds_manhole_cover_level[i]
+         , df.ds_paving_thickness[i]
+         , df.ds_invert_level[i]
+        )
