@@ -1,3 +1,20 @@
+us_manhole
+us_manhole_cover_level
+us_paving_thickness
+us_invert_level
+us_manhole_depth
+paving_type
+pipe_type
+pipe_dia
+pipe_length
+pipe_wall_thickness
+pipe_bedding_thickness
+effective_trench_width
+ds_manhole
+ds_manhole_cover_level
+ds_paving_thickness
+ds_invert_level
+
 import matplotlib.pyplot as plt
 import numpy as np
 def draw(us_manhole, us_manhole_cover_level, us_paving_thickness, us_invert_level, us_manhole_depth, \
